@@ -2,7 +2,7 @@ import sys
 import warnings
 
 import rating_value
-import rating_classes
+#import sp_rating_classes
 import utils
 
 class BaseRater(object):

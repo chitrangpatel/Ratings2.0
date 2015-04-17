@@ -1,7 +1,7 @@
 import numpy as np
 
 import base
-from rating_classes import profile
+from sp_rating_classes import profile
 
 class PeakOverRMSRater(base.BaseRater):
     short_name = "peakoverrms"
@@ -9,7 +9,7 @@ class PeakOverRMSRater(base.BaseRater):
     description = "Compute the peak amplitude of the profile divided" \
                   "by the RMS amplitude. Specifically, compute " \
                   "(max(profile)-median(profile))/std(profile)."
-    version = 3
+    version = 1
     
     rat_cls = profile.ProfileClass()
 
@@ -18,7 +18,7 @@ class PeakOverRMSRater(base.BaseRater):
             the profile peak divided by its RMS.
 
             Input:
-                cand: A Candidate object to rate.
+                cand: An SPCandidate object to rate.
 
             Output:
                 value: The rating value.

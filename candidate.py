@@ -120,7 +120,7 @@ class SPCandidate(object):
                 fn: The output file name.
         """
         if fn is None:
-            fn = self.pfdfn+".rat"
+            fn = self.spdfn+".rat"
         f = open(fn, 'w')
         f.write(self.get_ratings_string(*args, **kwargs))
         f.close()

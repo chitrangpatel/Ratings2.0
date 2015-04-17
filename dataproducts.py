@@ -432,3 +432,15 @@ class PulseWindowStats(object):
         corrcoef_sum = np.sum(self.corr_coefs)
         num_unzapped = np.sum(np.bitwise_not(self.corr_coefs.mask))
         return corrcoef_sum/float(num_unzapped)
+
+class WaterfallDD(object):
+    def __init__(self, data, dm, time_axis, freq_axis):
+        self.data = data
+        self.dm = dm
+        self.time_axis = time_axis
+        self.freq_axis = freq_axis
+
+    def get_profile(self):
+        prof = self.data.sum(axis=0).squeeze()
+        return prof
+

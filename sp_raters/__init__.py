@@ -35,8 +35,10 @@ registered_raters = ["duty_cycle", \
                      "peace_score"]
 """
 
-registered_raters = ["peak_over_rms", \
-                     "wiggle"]
+#registered_raters = ["wiggle", \
+#                     "peak_over_rms"]
+
+registered_raters = ["peak_over_rms"]
 
 __all__ = registered_raters
 

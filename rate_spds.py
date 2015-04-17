@@ -45,7 +45,7 @@ def main():
         args.list_raters = True
 
     if args.list_raters:
-        utils.print_raters_list(args.verbosity)
+        utils.print_sp_raters_list(args.verbosity)
         sys.exit(0)
 
     if args.ignore_warnings:
