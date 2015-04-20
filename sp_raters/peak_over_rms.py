@@ -24,6 +24,6 @@ class PeakOverRMSRater(base.BaseRater):
                 value: The rating value.
         """
         prof = cand.profile
-        return (np.amax(prof)-np.median(prof))/np.std(prof)
+        return (np.amax(prof)-np.median(prof))/np.std(prof[(cand.spd.waterfall_nbins/2):])
 
 Rater = PeakOverRMSRater
