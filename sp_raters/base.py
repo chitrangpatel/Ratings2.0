@@ -44,7 +44,7 @@ class BaseRater(object):
             warnings.warn("%s -- RatingError encountered when rating " \
                              "candidate (%s): %s\n" \
                              "Setting rating value to None and continuing..." % \
-                             (self.__class__.__name__, cand.pfdfn, str(e)),
+                             (self.__class__.__name__, cand.spdfn, str(e)),
                            utils.RatingWarning)
             value = None
         
