@@ -8,7 +8,7 @@ class GaussianFWHMRater(base.BaseRater):
                   "fit to the profile."
     version = 1
 
-    rat_cls = gaussian.SingleGaussianProfileClass()
+    rat_cls = gaussian.GaussianProfileClass()
 
     def _compute_rating(self, cand):
         """Return a rating for the candidate. The rating value is the
@@ -21,7 +21,7 @@ class GaussianFWHMRater(base.BaseRater):
             Output:
                 value: The rating value.
         """
-        sgauss = cand.singlegaussfit
+        sgauss = cand.gaussfit
         ncomp = len(sgauss.components)
         if ncomp == 1:
             fwhm = sgauss.components[0].fwhm

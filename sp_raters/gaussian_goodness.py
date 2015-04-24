@@ -9,7 +9,7 @@ class GaussianGofRater(base.BaseRater):
                   "profile. Good fits should have a reduced chi2 of ~1"
     version = 1
 
-    rat_cls = gaussian.SingleGaussianProfileClass()
+    rat_cls = gaussian.GaussianProfileClass()
 
     def _compute_rating(self, cand):
         """Return a rating for the candidate. The rating value is the
@@ -23,7 +23,7 @@ class GaussianGofRater(base.BaseRater):
                 value: The rating value.
         """
         profile = utils.get_scaled_profile(cand.profile, cand.spd.varprof)
-        sgauss = cand.singlegaussfit
+        sgauss = cand.gaussfit
         chi2 = sgauss.get_chisqr(profile)
         dof = sgauss.get_dof(len(profile))
         return chi2/dof
