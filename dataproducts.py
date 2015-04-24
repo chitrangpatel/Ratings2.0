@@ -316,7 +316,7 @@ class MultiGaussFit(object):
         """Add a component to the MultiGaussianFit.
             
             Input:
-                comp: A MulitGaussComponent to add.
+                comp: A MultiGaussComponent to add.
 
             Outputs:
                 None
