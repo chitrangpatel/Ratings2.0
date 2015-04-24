@@ -188,7 +188,7 @@ def multigaussfit_from_paramlist(params):
     comps = []
     for ii in range(1, len(params), 3):
         amp = params[ii]
-        std = params[ii+1]
+        std = np.abs(params[ii+1])
         phs = params[ii+2]
         comps.append(dataproducts.MultiGaussComponent(amp, std, phs))
     fit = dataproducts.MultiGaussFit(offset=params[0], components=comps)
