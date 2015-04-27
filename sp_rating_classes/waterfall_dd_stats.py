@@ -5,7 +5,7 @@ import gaussian
 import waterfall_dd
 
 class WaterfallDDStats(gaussian.GaussianProfileClass, waterfall_dd.WaterfallDDClass):
-    data_key = "subband_stats"
+    data_key = "waterfall_dd_stats"
 
     def _compute_data(self, cand):
         """Compute statistics for waterfall plot and return an object storing them.
