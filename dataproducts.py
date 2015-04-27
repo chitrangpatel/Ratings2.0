@@ -440,6 +440,8 @@ class WaterfallDD(object):
         self.time_axis = time_axis
         self.freq_axis = freq_axis
 
+        self.nchan, self.nbin = self.data.shape
+
     def get_profile(self):
         prof = self.data.sum(axis=0).squeeze()
         return prof
