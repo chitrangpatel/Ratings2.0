@@ -38,7 +38,7 @@ registered_raters = ["duty_cycle", \
 #registered_raters = ["wiggle", \
 #                     "peak_over_rms"]
 
-registered_raters = ["peak_over_rms", "wiggle", "gaussian_amplitude", "gaussian_goodness", "gaussian_fwhm", "frac_good_subbands", "subbands_snrstd"]
+registered_raters = ["peak_over_rms", "wiggle", "gaussian_amplitude", "gaussian_goodness", "gaussian_fwhm", "frac_good_subbands", "subbands_snrstd", "known_pulsar"]
 
 __all__ = registered_raters
 
