@@ -1,5 +1,5 @@
 import base
-from rating_classes import subband_stats
+from sp_rating_classes import waterfall_dd_stats
 
 class SubbandsSNRStdev(base.BaseRater):
     short_name = "subbands_snrstd"
