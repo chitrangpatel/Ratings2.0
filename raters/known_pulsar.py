@@ -24,7 +24,7 @@ class KnownPulsarRater(base.BaseRater):
                     "integer and fractional harmonics are also checked. " \
                     "NOTES: " \
                         "1) low values of this rating indicate a higher " \
-                            "change of the candidate being a known pulsar. " \
+                            "chance of the candidate being a known pulsar. " \
                         "2) rating values are constrained to be < 10."
     version = 1
 
