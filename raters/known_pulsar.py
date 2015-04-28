@@ -12,7 +12,7 @@ from rating_classes import pfd
 M = 99
 MAX_NUMERATOR = 33
 MAX_DENOMINATOR = 5
-KNOWNPSR_FILENM = os.path.join(os.path.split(__file__)[0], "../knownpulsars.txt")
+KNOWNPSR_FILENM = os.path.join(os.path.split(__file__)[0], "../knownpulsars.csv")
 
 
 class KnownPulsarRater(base.BaseRater):
@@ -44,8 +44,14 @@ class KnownPulsarRater(base.BaseRater):
         outer = np.outer(numerator, 1/denominator)
         self.ratios = np.unique(outer[outer!=1])
 
-        self.known_periods, self.known_dms, self.known_ras, self.known_decls = \
-                np.loadtxt(KNOWNPSR_FILENM, usecols=(0,1,2,3), unpack=True)
+        known_pulsars = np.recfromcsv(KNOWNPSR_FILENM, delimiter=";", comments="#",\
+            usecols=(1,2,3,4,5), dtype=(str, float, float, float, float))
+
+        #self.known_names = known_pulsars['name']
+        self.known_periods = known_pulsars['p0']
+        self.known_dms = known_pulsars['dm']
+        self.known_ras = known_pulsars['rajd']
+        self.known_decs = known_pulsars['decjd']
 
     def _compute_rating(self, cand):
         """Return a rating for the candidate. The rating value encodes 
@@ -61,10 +67,10 @@ class KnownPulsarRater(base.BaseRater):
         candp = cand.info['bary_period']
         canddm = cand.info['dm']
         ra = cand.info['raj_deg']
-        decl = cand.info['decj_deg']
+        dec = cand.info['decj_deg']
 
         diff_ra = np.abs(self.known_ras - ra)
-        diff_dec = np.abs(self.known_decls - decl)
+        diff_dec = np.abs(self.known_decs - dec)
 
         ii_nearby = (diff_ra < 0.2) & (diff_dec < 0.2)
         knownps = self.known_periods[ii_nearby]
