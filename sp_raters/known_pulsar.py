@@ -33,8 +33,8 @@ class KnownPulsarRater(base.BaseRater):
                 None
         """
 
-        # Using "Short csv without errors" output from ATNF with "DM > 0" condition
-        # returning Name, RaJD, DecJD, P0, DM
+        # Using "Short csv without errors" output from ATNF with "DM > 0 && P0 > 0"
+        # condition returning Name, RaJD, DecJD, P0, DM
         # And removing second line (units)
         known_pulsars = np.recfromcsv(KNOWNPSR_FILENM, delimiter=";", comments='@',\
             usecols=(1,2,3,4,5), dtype=(str, float, float, float, float))
