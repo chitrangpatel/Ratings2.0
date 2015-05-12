@@ -42,7 +42,8 @@ class RatingInstanceIDCache(object):
         global database
         import database 
         self.dbname = dbname
-        self.idcache = {}
+        self.sp_idcache = {} # cache for SP rating instances
+        self.pdm_idcache = {} # cache for PDM rating instances
 
         self.get_id = self.get_pdm_id # for backwards compatability
 
@@ -61,12 +62,12 @@ class RatingInstanceIDCache(object):
             Output:
                 id: The pdm_rating_type_id from the DB.
         """
-        if (name, version) in self.idcache:
-            id = self.idcache[(name,version)]
+        if (name, version) in self.pdm_idcache:
+            id = self.pdm_idcache[(name,version)]
         else:
             # Check database for a match
             id = self._get_id_from_db(name, version, description, pdm_or_sp='pdm')
-            self.idcache[(name, version)] = id
+            self.pdm_idcache[(name, version)] = id
         return id
 
     def get_sp_id(self, name, version, description):
@@ -84,12 +85,12 @@ class RatingInstanceIDCache(object):
             Output:
                 id: The sp_rating_type_id from the DB.
         """
-        if (name, version) in self.idcache:
-            id = self.idcache[(name,version)]
+        if (name, version) in self.sp_idcache:
+            id = self.sp_idcache[(name,version)]
         else:
             # Check database for a match
             id = self._get_id_from_db(name, version, description, pdm_or_sp='sp')
-            self.idcache[(name, version)] = id
+            self.sp_idcache[(name, version)] = id
         return id
 
     def _get_id_from_db(self, name, version, description, pdm_or_sp='pdm'):
