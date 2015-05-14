@@ -3,6 +3,7 @@ import numpy as np
 
 import base
 from sp_rating_classes import spd
+from sp_utils import ddm_response
 
 # Initialise constants
 KNOWNPSR_FILENM = os.path.join(os.path.split(__file__)[0], "../knownpulsars.csv")
@@ -67,13 +68,11 @@ class KnownPulsarRater(base.BaseRater):
 
         dm_diffs = np.abs(self.known_dms - dm)
 
-        # the DM offset that corresponds to a shift of one pulse width across the band
-        pulsewidth_dmoffs = pulsewidth / (4.148808e3 * (MOCK_BAND[0]**(-2) - MOCK_BAND[1]**(-2)))
-
-        # If the signal is at exactly the position and DM of a known pulsar, this will return 1.0.  The beam response dropping off
-        # as a gaussian is not too crazy, though the DM difference effect is pretty arbitrary.
-        all_values = gaussian_response(offsets_arcmin, BEAM_FWHM_ARCMIN / (2. * np.sqrt(2.*np.log(2)))) \
-            * gaussian_response(dm_diffs, pulsewidth_dmoffs)
+        # If the signal is at exactly the position and DM of a known pulsar,
+        # this will return 1.0.  The beam response drops off as a gaussian,
+        # the dDM response drops off according to Cordes & McLaughlin 2003
+        # using the observed pulse width
+        all_values = gaussian_response(offsets_arcmin, BEAM_FWHM_ARCMIN / (2. * np.sqrt(2.*np.log(2)))) * ddm_response(dm_diffs, pulsewidth/1000., MOCK_BAND)
 
         # Picking the value that presumably corresponds to the best pulsar match
         return np.max(all_values)
