@@ -42,9 +42,12 @@ class RatingInstanceIDCache(object):
         global database
         import database 
         self.dbname = dbname
-        self.idcache = {}
+        self.sp_idcache = {} # cache for SP rating instances
+        self.pdm_idcache = {} # cache for PDM rating instances
 
-    def get_id(self, name, version, description):
+        self.get_id = self.get_pdm_id # for backwards compatability
+
+    def get_pdm_id(self, name, version, description):
         """Return the pdm_rating_instance_id of the rating
             matching the arguments provided. If there is
             no match cached fetch from the DB. If there is
@@ -59,34 +62,59 @@ class RatingInstanceIDCache(object):
             Output:
                 id: The pdm_rating_type_id from the DB.
         """
-        if (name, version) in self.idcache:
-            id = self.idcache[(name,version)]
+        if (name, version) in self.pdm_idcache:
+            id = self.pdm_idcache[(name,version)]
         else:
             # Check database for a match
-            id = self._get_id_from_db(name, version, description)
-            self.idcache[(name, version)] = id
+            id = self._get_id_from_db(name, version, description, pdm_or_sp='pdm')
+            self.pdm_idcache[(name, version)] = id
         return id
 
-    def _get_id_from_db(self, name, version, description):
-        """Get the rating instance from the DB.
-
+    def get_sp_id(self, name, version, description):
+        """Return the sp_rating_instance_id of the rating
+            matching the arguments provided. If there is
+            no match cached fetch from the DB. If there is
+            no match in the DB insert it. Any newly added/fetched
+            IDs are added to the cache.
+            
             Inputs:
                 name: The rating's name.
                 version: The rating's version
                 description: The rating's description
 
             Output:
-                id: The pdm_rating_type_id from the DB.
+                id: The sp_rating_type_id from the DB.
+        """
+        if (name, version) in self.sp_idcache:
+            id = self.sp_idcache[(name,version)]
+        else:
+            # Check database for a match
+            id = self._get_id_from_db(name, version, description, pdm_or_sp='sp')
+            self.sp_idcache[(name, version)] = id
+        return id
+
+    def _get_id_from_db(self, name, version, description, pdm_or_sp='pdm'):
+        """Get the rating instance from the DB.
+
+            Inputs:
+                name: The rating's name.
+                version: The rating's version
+                description: The rating's description
+                pdm_or_sp: Whether the rating is for PDM or SP candidates
+
+            Output:
+                id: The pdm_rating_type_id or sp_rating_type_id from the DB.
         """
         db = database.Database(self.dbname)
-        db.execute("SELECT ri.pdm_rating_instance_id, " \
+        query = "SELECT ri.%s_rating_instance_id, " \
                         "rt.name, " \
                         "ri.version " \
-                   "FROM pdm_rating_instance AS ri WITH(NOLOCK) " \
-                   "LEFT JOIN pdm_rating_type AS rt WITH(NOLOCK) " \
-                        "ON rt.pdm_rating_type_id=ri.pdm_rating_type_id " \
+                   "FROM %s_rating_instance AS ri WITH(NOLOCK) " \
+                   "LEFT JOIN %s_rating_type AS rt WITH(NOLOCK) " \
+                        "ON rt.%s_rating_type_id=ri.%s_rating_type_id " \
                    "WHERE rt.name=? AND ri.version>=? " \
-                   "ORDER BY ri.version DESC", (name, version))
+                   "ORDER BY ri.version DESC" % tuple([pdm_or_sp]*5)
+        db.execute(query,(name, version))
         row = db.cursor.fetchone()
         db.close()
         if (row is not None) and (row[2] == version):
@@ -99,10 +127,10 @@ class RatingInstanceIDCache(object):
                               "%s (v%d)" % \
                               (name, version, row[1], row[2]))
         else: # no row or row[2] < version
-            id = self._add_id_to_db(name, version, description)
+            id = self._add_id_to_db(name, version, description,pdm_or_sp=pdm_or_sp)
         return id
 
-    def _add_id_to_db(self, name, version, description):
+    def _add_id_to_db(self, name, version, description, pdm_or_sp="pdm"):
         """Add the rating instance (and type, if neccessary)
             to the database, and return the corresponding 
             pdm_rating_instance_id.
@@ -111,45 +139,52 @@ class RatingInstanceIDCache(object):
                 name: The rating's name.
                 version: The rating's version
                 description: The rating's description
+                pdm_or_sp: Whether the rating is for PDM or SP candidates
 
             Output:
-                id: The pdm_rating_type_id from the DB.
+                id: The pdm_rating_type_id or sp_rating_type_id from the DB.
         """
         db = database.Database(self.dbname)
         # Check for rating type
-        db.execute("SELECT pdm_rating_type_id FROM pdm_rating_type " \
-                    "WHERE name=?", (name,))
+        query = "SELECT %s_rating_type_id FROM %s_rating_type " \
+                    "WHERE name=?" % tuple(2*[pdm_or_sp])
+        db.execute(query, name)
         row = db.cursor.fetchone()
         
         # Add rating type if necessary
         if row is not None:
             type_id = row[0]
         else:
-            db.execute("INSERT INTO pdm_rating_type " \
-                        "(name, description) " \
-                        "VALUES (?, ?)", (name, description))
-            db.execute("SELECT pdm_rating_type_id " \
-                        "FROM pdm_rating_type " \
-                        "WHERE name=?", name)
+            query = "INSERT INTO %s_rating_type " \
+                     "(name, description) " \
+                     "VALUES (?, ?)" % pdm_or_sp
+            db.execute(query, (name, description))
+            query = "SELECT %s_rating_type_id " \
+                        "FROM %s_rating_type " \
+                        "WHERE name=?" % tuple(2*[pdm_or_sp])
+            db.execute(query, name)
             type_id = db.cursor.fetchone()[0]
 
         # Check for rating instance
-        db.execute("SELECT pdm_rating_instance_id FROM pdm_rating_instance " \
-                    "WHERE pdm_rating_type_id=? " \
-                        "AND version=?", (type_id, version))
+        query = "SELECT %s_rating_instance_id FROM %s_rating_instance " \
+                    "WHERE %s_rating_type_id=? " \
+                    "AND version=?" % tuple(3*[pdm_or_sp]) 
+        db.execute(query, (type_id, version))
         row = db.cursor.fetchone()
 
         # Add rating instance if necessary
         if row is not None:
             id = row[0]
         else:
-            db.execute("INSERT INTO pdm_rating_instance " \
-                        "(pdm_rating_type_id, version, description) " \
-                        "VALUES (?, ?, ?)", (type_id, version, description))
-            db.execute("SELECT pdm_rating_instance_id " \
-                        "FROM pdm_rating_instance " \
-                        "WHERE pdm_rating_type_id=? " \
-                            "AND version=?", (type_id, version))
+            query = "INSERT INTO %s_rating_instance " \
+                        "(%s_rating_type_id, version, description) " \
+                        "VALUES (?, ?, ?)" % tuple(2*[pdm_or_sp]) 
+            db.execute(query, (type_id, version, description))
+            query = "SELECT %s_rating_instance_id " \
+                        "FROM %s_rating_instance " \
+                        "WHERE %s_rating_type_id=? " \
+                        "AND version=?" % tuple(3*[pdm_or_sp]) 
+            db.execute(query,(type_id, version))
             id = db.cursor.fetchone()[0]
         db.close()
 
