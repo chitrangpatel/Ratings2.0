@@ -223,7 +223,7 @@ def multigaussfit_from_paramlist(params):
     comps = []
     for ii in range(1, len(params), 3):
         amp = params[ii]
-        std = params[ii+1]
+        std = np.abs(params[ii+1])
         phs = params[ii+2]
         comps.append(dataproducts.MultiGaussComponent(amp, std, phs))
     fit = dataproducts.MultiGaussFit(offset=params[0], components=comps)
@@ -245,6 +245,29 @@ def print_raters_list(verbosity=0):
     print "Number of raters registered: %d" % len(raters.registered_raters)
     for rater_name in raters.registered_raters:
         rater_module = getattr(raters, rater_name)
+        rater = rater_module.Rater()
+        print "'%s': %s (v%d)" % (rater_name, rater.long_name, rater.version)
+        if verbosity:
+            print ""
+            for line in rater.description.split('\n'):
+                print textwrap.fill(line, width=70)
+            print "-"*25
+
+def print_sp_raters_list(verbosity=0):
+    """Print the list of imported single pulse raters to stdout.
+        
+        Input:
+            verbosity: If True, print description of raters.
+                (Default: Don't be verbose.)
+
+        Outputs:
+            None
+    """
+    import textwrap
+    import sp_raters
+    print "Number of single pulse raters registered: %d" % len(sp_raters.registered_raters)
+    for rater_name in sp_raters.registered_raters:
+        rater_module = getattr(sp_raters, rater_name)
         rater = rater_module.Rater()
         print "'%s': %s (v%d)" % (rater_name, rater.long_name, rater.version)
         if verbosity:

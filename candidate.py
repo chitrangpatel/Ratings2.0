@@ -8,7 +8,7 @@ Patrick Lazarus, Dec 15. 2011 - mid-flight
 """
 import prepfold
 import psr_utils
-
+import sp_utils
 
 class Candidate(object):
     """
@@ -81,6 +81,66 @@ class Candidate(object):
         self.cache = {}
 
 
+class SPCandidate(object):
+    """
+    Analagous to Candidate class, but for single pulse candidates.
+    """
+    def __init__(self, dm, raj_deg, decj_deg, spdfn):
+        """Constructor for SPCandidate objects
+            
+            Inputs:
+                dm: Dispersion measure (in pc cm^-3)
+                raj_deg: Right Ascension (J2000 in degrees)
+                decj_deg: Declination (J2000 in degrees)
+                spdfn: The *.spd file for this candidate.
+ 
+            Output:
+                cand: SPCandidate object
+        """
+        self.dm = dm
+        self.raj_deg = raj_deg
+        self.decj_deg = decj_deg
+        self.spdfn = spdfn
+        self.rating_values = []
+
+    def add_rating(self, ratval):
+        self.rating_values.append(ratval)
+
+    def get_ratings_string(self, sep=('-'*45+'\n')):
+        return sep.join([str(rv)+'\n' for rv in self.rating_values])
+    
+    def get_ratings_overview(self):
+        return '\n'.join([rv.get_short_string() for rv in self.rating_values])
+
+    def write_ratings_to_file(self, fn=None, *args, **kwargs):
+        """Write candidate's ratings to file.
+            
+            Inputs:
+                fn: File name to write ratings to.
+                    (Default: generate the file name based on
+                            the candidate's SPD file's name.)
+                **Additional arguments are passed to 'get_ratings_string(...)'
+
+            Outputs:
+                fn: The output file name.
+        """
+        if fn is None:
+            fn = self.spdfn+".rat"
+        f = open(fn, 'w')
+        f.write(self.get_ratings_string(*args, **kwargs))
+        f.close()
+        return fn
+
+    def add_to_cache(self, key, val):
+        setattr(self, key, val)
+        
+    def get_from_cache(self, key):
+        return getattr(self, key)
+        
+    def is_in_cache(self, key):
+        return hasattr(self, key)
+
+
 def read_pfd_file(pfdfn):
     """Return a Candidate object for the pfd given.
 
@@ -96,4 +156,18 @@ def read_pfd_file(pfdfn):
                     psr_utils.ra_to_rad(pfd.rastr)*psr_utils.RADTODEG, \
                     psr_utils.dec_to_rad(pfd.decstr)*psr_utils.RADTODEG, \
                     pfdfn)
+    return cand
+
+def read_spd_file(spdfn):
+    """Return a SPCandidate object for the spd given.
+
+        Input:
+            spdfn: *.spd file name.
+
+        Output:
+            cand: Candidate object constructed from the given pfd
+                file name.
+    """
+    spd = sp_utils.spd(spdfn)
+    cand = SPCandidate(spd.best_dm, spd.ra_deg, spd.dec_deg, spdfn)
     return cand
