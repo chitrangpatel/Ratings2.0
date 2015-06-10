@@ -85,7 +85,9 @@ def main():
                 traceback.print_exc()
     else:
         for pfdfn in args.infiles:
-            cands.append(rate_pfd(pfdfn, rater_instances))
+            cand = rate_pfd(pfdfn, rater_instances)
+            cands.append(cand)
+            cand.clear_cache()
     for cand in cands:
         if args.write_to_file:
             cand.write_ratings_to_file()
@@ -109,10 +111,10 @@ class RemoveOneRaterAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         rater_name = values[0]
         if rater_name not in raters.registered_raters:
-            sys.stderr.write("Unrecognized rater: %s\nThe following " \
-                             "raters are registered:\n    %s\n" % \
-                             (rater_name, "\n    ".join(raters.registered_raters)))
-            sys.exit(1)
+            warnings.warn("Unrecognized rater: %s\nDoing nothing\n:" \
+                          "The following raters are registered:\n    %s\n" % \
+                          (rater_name, "\n    ".join(raters.registered_raters)))
+            return
         curr_raters = getattr(namespace, self.dest)
         # Remove any instances of 'values' from curr_raters
         while rater_name in curr_raters:
