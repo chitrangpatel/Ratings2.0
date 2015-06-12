@@ -9,17 +9,27 @@ from rating_classes import pfd as pfdcls
 class DMCurveRater(base.BaseRater):
     short_name = "dm_curve"
     long_name = "DM Curve"
-    #description = "Compute the ratio of peak height for the profile " \
-    #              "dedispersed at DM 0 divided by that for the profile " \
-    #              "dedispersed at the best-fit DM."
-    description = ""
+    description = "Generate a simulated set of subbands using the 1D " \
+                  "summed profile, dedisperse the real and simulated " \
+                  "data at a set of trial DMs, then get a reduced " \
+                  "chi-squared value for the difference between the two " \
+                  "DM-vs-chisq curves. Pulsars with reasonable statistics " \
+                  "(not crazy bright ones) should return a value near or " \
+                  "below 1."
     version = 1
 
     rat_cls = pfdcls.PfdRatingClass()
 
     def _compute_rating(self, cand):
         """Return a rating for the candidate.
-            === MORE EXPLANATION NEEDED ===
+            Generate a simulated set of subbands using the 1D
+            summed profile, dedisperse the real and simulated
+            data at a set of trial DMs, then get a reduced
+            chi-squared value for the difference between the two
+            DM-vs-chisq curves. Pulsars with reasonable statistics
+            (not crazy bright ones) should return a value near or
+            below 1.
+           
 
             Input:
                 cand: A Candidate object to rate.
