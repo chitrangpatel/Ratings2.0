@@ -11,6 +11,7 @@ registered_raters = ["duty_cycle", \
                      "dm_comparison_std", \
                      "dm_comparison_chisqr", \
                      "dm_comparison_peak", \
+                     "dm_curve",\
                      "gaussian_amplitude", \
                      "gaussian_goodness", \
                      "gaussian_fwhm", \
