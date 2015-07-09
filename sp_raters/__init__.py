@@ -2,43 +2,15 @@ import warnings
 
 import utils
 
-"""
-registered_raters = ["duty_cycle", \
-                     "pulse_width", \
-                     "wiggle", \
-                     "known_pulsar", \
-                     "mains_rfi", \
-                     "peak_over_rms", \
-                     "dm_comparison_std", \
-                     "dm_comparison_chisqr", \
-                     "dm_comparison_peak", \
-                     "gaussian_amplitude", \
-                     "gaussian_goodness", \
-                     "gaussian_fwhm", \
-                     "frac_good_subbands", \
-                     "frac_good_intervals", \
-                     "subbands_snrstd", \
-                     "subints_snrstd", \
-                     "multigauss_number", \
-                     "multigauss_goodness", \
-                     "ubc_pfd_ai", \
-                     "peace_bb_gauss", \
-                     "peace_bb_progcnt", \
-                     "peace_dmsmear", \
-                     "peace_gauss_score", \
-                     "peace_persistence_gauss", \
-                     "peace_persistence_progcnt", \
-                     "peace_progcnt_score", \
-                     "peace_pulsewidth_gauss", \
-                     "peace_pulsewidth_progcnt", \
-                     "peace_snr", \
-                     "peace_score"]
-"""
-
-#registered_raters = ["wiggle", \
-#                     "peak_over_rms"]
-
-registered_raters = ["peak_over_rms", "wiggle", "gaussian_amplitude", "gaussian_goodness", "gaussian_fwhm", "frac_good_subbands", "subbands_snrstd", "known_pulsar"]
+registered_raters = ["peak_over_rms",\
+                     "wiggle",\
+                     "gaussian_amplitude",\
+                     "gaussian_goodness",\
+                     "gaussian_fwhm",\
+                     "frac_good_subbands",\
+                     "subbands_snrstd",\
+                     "known_pulsar",\
+                     "ubc_spd_ai"]
 
 __all__ = registered_raters
 
