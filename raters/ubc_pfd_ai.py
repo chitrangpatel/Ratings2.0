@@ -19,7 +19,7 @@ class ubc_pfd_ai(base.BaseRater):
     long_name = "UBC pfd AI"
     description = "compute the prediction from the pulsar classifier " \
                   "based on pfd files."
-    version = 4
+    version = 5
     
     rat_cls = profile.ProfileClass()
 
