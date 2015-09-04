@@ -10,6 +10,7 @@ registered_raters = ["peak_over_rms",\
                      "frac_good_subbands",\
                      "subbands_snrstd",\
                      "known_pulsar",\
+                     "max_dm_ratio",\
                      "ubc_spd_ai"]
 
 __all__ = registered_raters
