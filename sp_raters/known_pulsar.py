@@ -20,7 +20,7 @@ class KnownPulsarRater(base.BaseRater):
                     "known pulsar.  The value is between 0 and 1, with " \
                     "values closer to 1 indicating similarity to a known" \
                     "pulsar."
-    version = 1
+    version = 2
 
     rat_cls = spd.SpdRatingClass()
 
@@ -34,11 +34,9 @@ class KnownPulsarRater(base.BaseRater):
                 None
         """
 
-        # Using "Short csv without errors" output from ATNF with "DM > 0 && P0 > 0"
-        # condition returning Name, RaJD, DecJD, P0, DM
-        # And removing second line (units)
-        known_pulsars = np.recfromcsv(KNOWNPSR_FILENM, delimiter=";", comments='#',\
-            usecols=(1,2,3,4,5), dtype=(str, float, float, float, float))
+        known_pulsars = np.recfromcsv(KNOWNPSR_FILENM, delimiter=";",\
+          comments='#', usecols=(1,2,3,4,5),\
+          dtype=(str, float, float, float, float))
 
         self.known_names = known_pulsars['name']
         self.known_ras = known_pulsars['rajd']
@@ -72,9 +70,11 @@ class KnownPulsarRater(base.BaseRater):
         # this will return 1.0.  The beam response drops off as a gaussian,
         # the dDM response drops off according to Cordes & McLaughlin 2003
         # using the observed pulse width
-        all_values = gaussian_response(offsets_arcmin, BEAM_FWHM_ARCMIN / (2. * np.sqrt(2.*np.log(2)))) * ddm_response(dm_diffs, pulsewidth/1000., MOCK_BAND)
+        gresp = gaussian_response(offsets_arcmin, \
+          BEAM_FWHM_ARCMIN / (2. * np.sqrt(2.*np.log(2))))
+        dresp = ddm_response(dm_diffs, pulsewidth*1000., MOCK_BAND)
 
         # Picking the value that presumably corresponds to the best pulsar match
-        return np.max(all_values)
+        return np.max(np.sqrt(gresp*dresp))
 
 Rater = KnownPulsarRater
