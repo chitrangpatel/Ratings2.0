@@ -18,3 +18,4 @@ ftp_password = "pw"
 ################################################################
 knownpsr_filenm = "knownpulsars.txt" # Look in PWD
 pfd_classifier = "clfl2_BD.pkl" # classifier pickle for ubc_pfd_ai
+spd_classifier = "clfl2_SP_v0.pkl" # classifier pickle for ubc_spd_ai

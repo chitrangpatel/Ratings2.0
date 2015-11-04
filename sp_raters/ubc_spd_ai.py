@@ -10,7 +10,7 @@ import config
 #### setup UBC AI
 from ubc_AI.data import pfdreader
 import cPickle
-clfer = config.pfd_classifier
+clfer = config.spd_classifier
 classifier = cPickle.load(open(clfer, 'rb'))
 ####
 
@@ -19,7 +19,7 @@ class ubc_spd_ai(base.BaseRater):
     long_name = "UBC spd AI"
     description = "compute the prediction from the classifier " \
                   "based on spd files."
-    version = 1
+    version = 2
     
     rat_cls = profile.ProfileClass()
 
