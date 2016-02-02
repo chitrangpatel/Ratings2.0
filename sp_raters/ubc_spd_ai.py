@@ -19,7 +19,7 @@ class ubc_spd_ai(base.BaseRater):
     long_name = "UBC spd AI"
     description = "compute the prediction from the classifier " \
                   "based on spd files."
-    version = 2
+    version = 3
     
     rat_cls = profile.ProfileClass()
 
