@@ -5,7 +5,7 @@ import presto
 
 import base
 from sp_rating_classes import profile
-import config
+from ratings2 import config
 
 #### setup UBC AI
 from ubc_AI.data import pfdreader
