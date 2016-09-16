@@ -3,7 +3,8 @@ import numpy as np
 
 import base
 from sp_rating_classes import spd
-from sp_utils import ddm_response
+#from sp_utils import ddm_response
+from singlepulse.read_spd import ddm_response
 
 # Initialise constants
 KNOWNPSR_FILENM = os.path.join(os.path.split(__file__)[0], "../knownpulsars.csv")

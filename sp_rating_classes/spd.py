@@ -1,6 +1,7 @@
 import cand_info
 import myprepfold as prepfold
-import sp_utils
+#import sp_utils
+import singlepulse.read_spd as read_spd
 
 class SpdRatingClass(cand_info.CandInfoRatingClass):
     data_key = "spd"
@@ -16,5 +17,5 @@ class SpdRatingClass(cand_info.CandInfoRatingClass):
                 spd: The corresponding sp_utils.spd object.
         """
         spdfn = cand.info['spdfn']
-        spd = sp_utils.spd(spdfn)
+        spd = read_spd.spd(spdfn)
         return spd

@@ -8,7 +8,8 @@ Patrick Lazarus, Dec 15. 2011 - mid-flight
 """
 import prepfold
 import psr_utils
-import sp_utils
+#import sp_utils
+import singlepulse.read_spd as read_spd
 
 class Candidate(object):
     """
@@ -168,6 +169,7 @@ def read_spd_file(spdfn):
             cand: Candidate object constructed from the given pfd
                 file name.
     """
-    spd = sp_utils.spd(spdfn)
+    #spd = sp_utils.spd(spdfn)
+    spd = read_spd.spd(spdfn)
     cand = SPCandidate(spd.best_dm, spd.ra_deg, spd.dec_deg, spdfn)
     return cand
