@@ -45,7 +45,7 @@ class KnownPulsarRater(base.BaseRater):
         self.ratios = np.unique(outer[outer!=1])
 
         known_pulsars = np.recfromcsv(KNOWNPSR_FILENM, delimiter=";", comments="#",\
-            usecols=(1,2,3,4,5), dtype=(str, float, float, float, float))
+            usecols=(1,2,3,4,5))#, dtype=(str, float, float, float, float))
 
         #self.known_names = known_pulsars['name']
         self.known_periods = known_pulsars['p0']

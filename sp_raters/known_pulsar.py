@@ -36,8 +36,9 @@ class KnownPulsarRater(base.BaseRater):
         """
 
         known_pulsars = np.recfromcsv(KNOWNPSR_FILENM, delimiter=";",\
-          comments='#', usecols=(1,2,3,4,5),\
-          dtype=(str, float, float, float, float))
+          comments='#', usecols=(1,2,3,4,5))
+          #np.dtype=(np.str, np.float, np.float, np.float, np.float))
+          #dtype=(str, float, float, float, float))
 
         self.known_names = known_pulsars['name']
         self.known_ras = known_pulsars['rajd']

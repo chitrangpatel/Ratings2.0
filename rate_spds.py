@@ -58,7 +58,7 @@ def main():
     for rater_name in args.raters:
         rater_module = getattr(sp_raters, rater_name)
         rater_instances.append(rater_module.Rater())
-
+    
     cands = []
     if args.num_procs > 1:
         print "Using %d rater threads" % args.num_procs
