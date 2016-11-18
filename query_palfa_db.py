@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin python
 """
 Query the PALFA database and generate a CSV file (in the style of the ATNF
 pulsar catalog) with alle known sources with period > 0 and DM > 0.
